@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -33,5 +33,9 @@ def get_book_by_isbn(isbn):
 
     return jsonify(return_value)
 
+
+@app.route('/books', methods=['POST'])
+def add_book():
+    return jsonify(request.get_json())
 
 app.run(port=5000)
