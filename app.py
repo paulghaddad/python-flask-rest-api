@@ -51,6 +51,7 @@ def add_book():
         books.insert(0, new_book)
 
         response = Response('', 201, mimetype='application/json')
+        response.headers['Location'] = '/books/' + str(new_book['isbn'])
         return response
     else:
         return "False"
