@@ -43,7 +43,12 @@ def add_book():
     request_data = request.get_json()
 
     if validBookObject(request_data):
-        books.insert(0, request_data)
+        new_book = {
+            'name': request_data['name'],
+            'price': request_data['price'],
+            'isbn': request_data['isbn']
+        }
+        books.insert(0, new_book)
         return "True"
     else:
         return "False"
