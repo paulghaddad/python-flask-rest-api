@@ -62,4 +62,9 @@ def add_book():
         response = Response(json.dumps(invalidBookObjectErrorMsg), status=400, mimetype='application/json')
         return response
 
+
+@app.route('/books/<int:isbn>', methods=['PUT'])
+def replace_book(isbn):
+    pass
+
 app.run(port=5000)
