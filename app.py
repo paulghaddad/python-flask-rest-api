@@ -63,9 +63,23 @@ def add_book():
         return response
 
 
+def valid_put_request_data(bookObject):
+    return "name" in bookObject and "price" in bookObject
+
+
 @app.route('/books/<int:isbn>', methods=['PUT'])
 def replace_book(isbn):
     request_data = request.get_json()
+
+    if not valid_put_request_data(request_data):
+        invalidBookObjectErrorMsg = {
+            "error": "Invalid book object passed in request",
+            "helpString": "Correct data should be passed in"
+        }
+        response = Response(json.dumps(invalidBookObjectErrorMsg), status=400, mimetype='application/json')
+        return response
+
+
     new_book = {
         'name': request_data['name'],
         'price': request_data['price'],
