@@ -93,4 +93,9 @@ def replace_book(isbn):
     response = Response("", status=204, mimetype='application/json')
     return response
 
+
+@app.route('/books/<int:isbn>', methods=['PATH'])
+def update_book(isbn):
+    pass
+
 app.run(port=5000)
