@@ -40,6 +40,12 @@ def validBookObject(bookObject):
 
 @app.route('/books', methods=['POST'])
 def add_book():
-    return jsonify(request.get_json())
+    request_data = request.get_json()
+
+    if validBookObject(request_data):
+        books.insert(0, request_data)
+        return "True"
+    else:
+        return "False"
 
 app.run(port=5000)
