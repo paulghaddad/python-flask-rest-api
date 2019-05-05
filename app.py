@@ -34,6 +34,10 @@ def get_book_by_isbn(isbn):
     return jsonify(return_value)
 
 
+def validBookObject(bookObject):
+    return "name" in bookObject and "price" in bookObject and "isbn" in bookObject
+
+
 @app.route('/books', methods=['POST'])
 def add_book():
     return jsonify(request.get_json())
