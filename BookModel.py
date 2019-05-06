@@ -35,6 +35,18 @@ class Book(db.Model):
         db.session.commit()
 
 
+    def update_book_price(_isbn, _price):
+        book_to_update = db.session.query(Book).filter(Book.isbn == _isbn).first()
+        book_to_update.price = _price
+        db.session.commit()
+
+
+    def update_book_name(_isbn, _name):
+        book_to_update = db.session.query(Book).filter(Book.isbn == _isbn).first()
+        book_to_update.name = _name
+        db.session.commit()
+
+
     def __repr__(self):
         book_object = {
             'name': self.name,
