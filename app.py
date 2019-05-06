@@ -118,8 +118,14 @@ def delete_book(isbn):
     for i, book in enumerate(books):
         if book['isbn'] == isbn:
             books.pop(i)
+            response = Response("", status=204, mimetype='application/json')
+            return response
 
-    return ''
+    invalidBookObjectErrorMsg = {
+        "error": "A book with that ISBN was not found"
+    }
+    response = Response(json.dumps(invalidBookObjectErrorMsg), status=404, mimetype='application/json')
+    return response
 
 
 app.run(port=5000)
