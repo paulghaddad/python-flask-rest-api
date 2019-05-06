@@ -26,6 +26,10 @@ class Book(db.Model):
         return db.session.query(Book).all()
 
 
+    def get_book(_isbn):
+        return db.session.query(Book).filter(Book.isbn == _isbn).first()
+
+
     def __repr__(self):
         book_object = {
             'name': self.name,
