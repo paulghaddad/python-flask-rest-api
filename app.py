@@ -2,22 +2,18 @@ from flask import Flask, jsonify, request, Response
 import json
 
 from settings import app
-from Book import (
-    get_all_books,
-    add_book,
-    replace_book,
-)
+from BookModel import *
 
 
 @app.route('/books')
 def get_books():
     return jsonify({
-        'books': get_all_books()
+        'books': Book.get_all_books()
     })
 
 @app.route('/books/<int:isbn>')
 def get_book_by_isbn(isbn):
-    return_value = get_book(isbn)
+    return_value = Book.get_book(isbn)
 
     return jsonify(return_value)
 
@@ -31,7 +27,7 @@ def create_book():
     request_data = request.get_json()
 
     if validBookObject(request_data):
-        add_book(request_data['name'], request_data['price'], request_data['isbn'])
+        Book.add_book(request_data['name'], request_data['price'], request_data['isbn'])
 
         response = Response('', 201, mimetype='application/json')
         response.headers['Location'] = '/books/' + str(request_data['isbn'])
@@ -61,7 +57,7 @@ def put_book(isbn):
         response = Response(json.dumps(invalidBookObjectErrorMsg), status=400, mimetype='application/json')
         return response
 
-    replace_book(isbn, request_data['name'], request_data['price'])
+    Book.replace_book(isbn, request_data['name'], request_data['price'])
 
     response = Response("", status=204, mimetype='application/json')
     return response
@@ -73,13 +69,9 @@ def patch_book(isbn):
 
     updated_book = {}
     if 'name' in request_data:
-        updated_book['name'] = request_data['name']
+        Book.update_book_name(isbn, request_data['name'])
     if 'price' in request_data:
-        updated_book['price'] = request_data['price']
-
-    for book in books:
-        if book['isbn'] == isbn:
-            book.update(updated_book)
+        Book.update_book_price(isbn, request_data['price'])
 
     response = Response("", status=204, mimetype='application/json')
     response.headers['Location'] = '/books/' + str(isbn)
@@ -88,12 +80,9 @@ def patch_book(isbn):
 
 @app.route('/books/<int:isbn>', methods=['DELETE'])
 def delete_book(isbn):
-    for i, book in enumerate(books):
-        if book['isbn'] == isbn:
-            books.pop(i)
-            response = Response("", status=204, mimetype='application/json')
-            return response
-
+    if Book.delete_book(isbn):
+        response = Response("", status=204, mimetype='application/json')
+        return response
     invalidBookObjectErrorMsg = {
         "error": "A book with that ISBN was not found"
     }

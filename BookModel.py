@@ -39,8 +39,9 @@ class Book(db.Model):
 
 
     def delete_book(_isbn):
-        db.session.query(Book).filter(Book.isbn == _isbn).delete()
+        is_successful = db.session.query(Book).filter(Book.isbn == _isbn).delete()
         db.session.commit()
+        return bool(is_successful)
 
 
     def update_book_price(_isbn, _price):
