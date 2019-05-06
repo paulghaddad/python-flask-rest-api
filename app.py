@@ -113,4 +113,9 @@ def update_book(isbn):
     return response
 
 
+@app.route('/books/<int:isbn>', methods=['DELETE'])
+def delete_book():
+    pass
+
+
 app.run(port=5000)
