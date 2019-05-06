@@ -35,7 +35,7 @@ class Book(db.Model):
 
 
     def get_book(_isbn):
-        return db.session.query(Book).filter(Book.isbn == _isbn).first()
+        return Book.json(db.session.query(Book).filter(Book.isbn == _isbn).first())
 
 
     def delete_book(_isbn):

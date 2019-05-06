@@ -2,35 +2,22 @@ from flask import Flask, jsonify, request, Response
 import json
 
 from settings import app
+from Book import (
+    get_all_books,
+    add_book,
+    replace_book,
+)
 
-books = [
-    {
-        'name': 'Green eggs and ham',
-        'price': 7.99,
-        'isbn': 1756919797,
-    },
-    {
-        'name': 'The cat and the hat',
-        'price': 8.99,
-        'isbn': 1756919798,
-    },
-]
 
 @app.route('/books')
 def get_books():
     return jsonify({
-        'books': books
+        'books': get_all_books()
     })
 
 @app.route('/books/<int:isbn>')
 def get_book_by_isbn(isbn):
-    return_value = {}
-    for book in books:
-        if book['isbn'] == isbn:
-            return_value = {
-                'name': book['name'],
-                'price': book['price'],
-            }
+    return_value = get_book(isbn)
 
     return jsonify(return_value)
 
@@ -40,19 +27,14 @@ def validBookObject(bookObject):
 
 
 @app.route('/books', methods=['POST'])
-def add_book():
+def create_book():
     request_data = request.get_json()
 
     if validBookObject(request_data):
-        new_book = {
-            'name': request_data['name'],
-            'price': request_data['price'],
-            'isbn': request_data['isbn']
-        }
-        books.insert(0, new_book)
+        add_book(request_data['name'], request_data['price'], request_data['isbn'])
 
         response = Response('', 201, mimetype='application/json')
-        response.headers['Location'] = '/books/' + str(new_book['isbn'])
+        response.headers['Location'] = '/books/' + str(request_data['isbn'])
         return response
     else:
         invalidBookObjectErrorMsg = {
@@ -68,7 +50,7 @@ def valid_put_request_data(bookObject):
 
 
 @app.route('/books/<int:isbn>', methods=['PUT'])
-def replace_book(isbn):
+def put_book(isbn):
     request_data = request.get_json()
 
     if not valid_put_request_data(request_data):
@@ -79,23 +61,14 @@ def replace_book(isbn):
         response = Response(json.dumps(invalidBookObjectErrorMsg), status=400, mimetype='application/json')
         return response
 
-
-    new_book = {
-        'name': request_data['name'],
-        'price': request_data['price'],
-        'isbn': isbn
-    }
-
-    for i, book in enumerate(books):
-        if book['isbn'] == isbn:
-            books[i] = new_book
+    replace_book(isbn, request_data['name'], request_data['price'])
 
     response = Response("", status=204, mimetype='application/json')
     return response
 
 
 @app.route('/books/<int:isbn>', methods=['PATCH'])
-def update_book(isbn):
+def patch_book(isbn):
     request_data = request.get_json()
 
     updated_book = {}
