@@ -114,8 +114,12 @@ def update_book(isbn):
 
 
 @app.route('/books/<int:isbn>', methods=['DELETE'])
-def delete_book():
-    pass
+def delete_book(isbn):
+    for i, book in enumerate(books):
+        if book['isbn'] == isbn:
+            books.pop(i)
+
+    return ''
 
 
 app.run(port=5000)
