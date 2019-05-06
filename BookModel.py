@@ -15,3 +15,22 @@ class Book(db.Model):
     price = db.Column(db.Float, nullable=False)
 
     isbn = db.Column(db.Integer)
+
+    def add_book(_name, _price, _isbn):
+        new_book = Book(name=_name, price=_price, isbn=_isbn)
+        db.session.add(new_book)
+        db.session.commit()
+
+
+    def get_all_books():
+        return db.session.query(Book).all()
+
+
+    def __repr__(self):
+        book_object = {
+            'name': self.name,
+            'price': self.price,
+            'isbn': self.isbn
+        }
+
+        return json.dumps(book_object)
