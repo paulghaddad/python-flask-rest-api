@@ -30,6 +30,11 @@ class Book(db.Model):
         return db.session.query(Book).filter(Book.isbn == _isbn).first()
 
 
+    def delete_book(_isbn):
+        db.session.query(Book).filter(Book.isbn == _isbn).delete()
+        db.session.commit()
+
+
     def __repr__(self):
         book_object = {
             'name': self.name,
