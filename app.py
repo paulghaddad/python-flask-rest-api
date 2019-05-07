@@ -40,7 +40,6 @@ def get_token():
 
 
 @app.route('/books')
-@token_required
 def get_books():
     return jsonify({
         'books': Book.get_all_books()
@@ -58,6 +57,7 @@ def validBookObject(bookObject):
 
 
 @app.route('/books', methods=['POST'])
+@token_required
 def create_book():
     request_data = request.get_json()
 
@@ -81,6 +81,7 @@ def valid_put_request_data(bookObject):
 
 
 @app.route('/books/<int:isbn>', methods=['PUT'])
+@token_required
 def put_book(isbn):
     request_data = request.get_json()
 
@@ -99,6 +100,7 @@ def put_book(isbn):
 
 
 @app.route('/books/<int:isbn>', methods=['PATCH'])
+@token_required
 def patch_book(isbn):
     request_data = request.get_json()
 
@@ -114,6 +116,7 @@ def patch_book(isbn):
 
 
 @app.route('/books/<int:isbn>', methods=['DELETE'])
+@token_required
 def delete_book(isbn):
     if Book.delete_book(isbn):
         response = Response("", status=204, mimetype='application/json')
